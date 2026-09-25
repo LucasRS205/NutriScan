@@ -19,7 +19,9 @@ export default function CameraScreen({ navigation }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [processando, setProcessando] = useState(false);
   const [mensagemStatus, setMensagemStatus] = useState("");
+  const [cameraPronta, setCameraPronta] = useState(false);
   const cameraRef = useRef(null);
+
 
   // Enquanto a permissão de câmera ainda está sendo verificada.
   if (!permission) {
@@ -122,24 +124,33 @@ export default function CameraScreen({ navigation }) {
   return (
   <View style={styles.container}>
     <CameraView
-      ref={cameraRef}
-      style={StyleSheet.absoluteFillObject}
-      facing="back"
-    />
+  ref={cameraRef}
+  style={styles.camera}
+  facing="back"
+
+  onCameraReady={() => {
+    console.log("[Camera] Preview pronta");
+    setCameraPronta(true);
+  }}
+  onMountError={(error) => {
+    console.error("[Camera] Erro ao iniciar:", error);
+    setCameraPronta(false);
+  }}
+/>
 
     <SafeAreaView style={styles.overlay}>
       <View style={styles.topBar}>
         <Text style={styles.instructions}>
-          Enquadre a tabela nutricional do produto
+          Aponte a câmera para a tabela nutricional
         </Text>
       </View>
 
-      <View style={styles.frameGuide} />
 
       <View style={styles.bottomBar}>
         {processando ? (
           <View style={styles.processandoBox}>
             <ActivityIndicator color="#fff" size="large" />
+
             <Text style={styles.processandoText}>
               {mensagemStatus}
             </Text>
@@ -166,17 +177,29 @@ export default function CameraScreen({ navigation }) {
     </SafeAreaView>
   </View>
 );
-}
+} 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#000" },
-  camera: { flex: 1 },
-  overlay: {
+  container: {
     flex: 1,
+    backgroundColor: "#000",
+  },
+
+  camera: {
+    ...StyleSheet.absoluteFill,
+  },
+
+  overlay: {
+    ...StyleSheet.absoluteFill,
     justifyContent: "space-between",
     backgroundColor: "transparent",
   },
-  topBar: { padding: 20, alignItems: "center" },
+
+  topBar: {
+    padding: 20,
+    alignItems: "center",
+  },
+
   instructions: {
     color: "#fff",
     fontSize: 16,
@@ -187,16 +210,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
   },
-  frameGuide: {
-    alignSelf: "center",
-    width: "80%",
-    height: "45%",
-    borderWidth: 3,
-    borderColor: "rgba(255,255,255,0.8)",
-    borderRadius: 12,
-    borderStyle: "dashed",
+
+  
+
+  bottomBar: {
+    alignItems: "center",
+    paddingBottom: 30,
   },
-  bottomBar: { alignItems: "center", paddingBottom: 30 },
+
   captureButton: {
     width: 78,
     height: 78,
@@ -207,23 +228,58 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 16,
   },
+
   captureButtonInner: {
     width: 60,
     height: 60,
     borderRadius: 30,
     backgroundColor: "#fff",
   },
-  processandoBox: { alignItems: "center", marginBottom: 16 },
-  processandoText: { color: "#fff", marginTop: 10, fontSize: 14 },
-  historyLink: { padding: 8 },
-  historyLinkText: { color: "#fff", fontSize: 15, textDecorationLine: "underline" },
-  permissionBox: { flex: 1, justifyContent: "center", padding: 24 },
-  permissionText: { fontSize: 16, textAlign: "center", marginBottom: 20, color: "#333" },
+
+  processandoBox: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+
+  processandoText: {
+    color: "#fff",
+    marginTop: 10,
+    fontSize: 14,
+  },
+
+  historyLink: {
+    padding: 8,
+  },
+
+  historyLinkText: {
+    color: "#fff",
+    fontSize: 15,
+    textDecorationLine: "underline",
+  },
+
+  permissionBox: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 24,
+  },
+
+  permissionText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#333",
+  },
+
   button: {
     backgroundColor: "#1F3864",
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
   },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
 });

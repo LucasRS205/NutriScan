@@ -33,8 +33,7 @@ module.exports = {
       ],
     ],
     extra: {
-      // Essas variáveis ficam acessíveis em runtime via Constants.expoConfig.extra
-      googleCloudVisionApiKey: process.env.GOOGLE_CLOUD_VISION_API_KEY,
+      ocrSpaceApiKey: process.env.OCR_SPACE_API_KEY,
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
     },

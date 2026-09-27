@@ -174,7 +174,7 @@ git --version
 ### 1. Clonar e instalar
 
 ```bash
-git clone https://github.com/SEU-USUARIO/nutriscan.git
+git clone https://github.com/LucasRS205/nutriscan.git
 cd nutriscan
 npm install
 ```
